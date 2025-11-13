@@ -37,6 +37,7 @@ const Index = () => {
   ]);
 
   const [editingCrop, setEditingCrop] = useState<Crop | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleAddCrop = (newCrop: Omit<Crop, 'id'>) => {
     const crop: Crop = {
@@ -49,6 +50,7 @@ const Index = () => {
   const handleUpdateCrop = (updatedCrop: Crop) => {
     setCrops(crops.map(c => c.id === updatedCrop.id ? updatedCrop : c));
     setEditingCrop(null);
+    setIsDialogOpen(false);
   };
 
   const handleDeleteCrop = (id: string) => {
@@ -57,6 +59,12 @@ const Index = () => {
 
   const handleEditCrop = (crop: Crop) => {
     setEditingCrop(crop);
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    setEditingCrop(null);
   };
 
   if (!isConnected) {
@@ -140,6 +148,8 @@ const Index = () => {
             onAdd={handleAddCrop}
             editCrop={editingCrop}
             onUpdate={handleUpdateCrop}
+            open={isDialogOpen}
+            onOpenChange={handleDialogClose}
           />
         </div>
 

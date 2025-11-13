@@ -4,28 +4,79 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Crop } from './CropCard';
 
 interface AddCropDialogProps {
   onAdd: (crop: Omit<Crop, 'id'>) => void;
   editCrop?: Crop | null;
   onUpdate?: (crop: Crop) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function AddCropDialog({ onAdd, editCrop, onUpdate }: AddCropDialogProps) {
-  const [open, setOpen] = useState(false);
+export function AddCropDialog({ onAdd, editCrop, onUpdate, open: controlledOpen, onOpenChange }: AddCropDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen = onOpenChange || setInternalOpen;
   const [formData, setFormData] = useState<Omit<Crop, 'id'>>({
-    name: editCrop?.name || '',
-    variety: editCrop?.variety || '',
-    plantDate: editCrop?.plantDate || '',
-    growthStage: editCrop?.growthStage || 'Seeding',
-    expectedHarvest: editCrop?.expectedHarvest || '',
-    location: editCrop?.location || '',
-    area: editCrop?.area || '',
-    yieldPrediction: editCrop?.yieldPrediction || '',
-    pestControl: editCrop?.pestControl || '',
+    name: '',
+    variety: '',
+    plantDate: '',
+    growthStage: 'Seeding',
+    expectedHarvest: '',
+    location: '',
+    area: '',
+    yieldPrediction: '',
+    pestControl: '',
   });
+
+  // Update form data when editCrop changes
+  useEffect(() => {
+    if (editCrop) {
+      setFormData({
+        name: editCrop.name,
+        variety: editCrop.variety,
+        plantDate: editCrop.plantDate,
+        growthStage: editCrop.growthStage,
+        expectedHarvest: editCrop.expectedHarvest,
+        location: editCrop.location,
+        area: editCrop.area,
+        yieldPrediction: editCrop.yieldPrediction,
+        pestControl: editCrop.pestControl,
+      });
+    } else {
+      setFormData({
+        name: '',
+        variety: '',
+        plantDate: '',
+        growthStage: 'Seeding',
+        expectedHarvest: '',
+        location: '',
+        area: '',
+        yieldPrediction: '',
+        pestControl: '',
+      });
+    }
+  }, [editCrop]);
+
+  // Reset form when dialog closes
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (!newOpen && !editCrop) {
+      setFormData({
+        name: '',
+        variety: '',
+        plantDate: '',
+        growthStage: 'Seeding',
+        expectedHarvest: '',
+        location: '',
+        area: '',
+        yieldPrediction: '',
+        pestControl: '',
+      });
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,22 +85,11 @@ export function AddCropDialog({ onAdd, editCrop, onUpdate }: AddCropDialogProps)
     } else {
       onAdd(formData);
     }
-    setOpen(false);
-    setFormData({
-      name: '',
-      variety: '',
-      plantDate: '',
-      growthStage: 'Seeding',
-      expectedHarvest: '',
-      location: '',
-      area: '',
-      yieldPrediction: '',
-      pestControl: '',
-    });
+    handleOpenChange(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button className="bg-gradient-primary">
           <Plus className="h-4 w-4 mr-2" />
@@ -174,7 +214,7 @@ export function AddCropDialog({ onAdd, editCrop, onUpdate }: AddCropDialogProps)
           </div>
 
           <div className="flex gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="flex-1">
+            <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} className="flex-1">
               Cancel
             </Button>
             <Button type="submit" className="flex-1 bg-gradient-primary">
