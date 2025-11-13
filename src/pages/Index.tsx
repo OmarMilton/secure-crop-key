@@ -148,8 +148,7 @@ const Index = () => {
             onAdd={handleAddCrop}
             editCrop={editingCrop}
             onUpdate={handleUpdateCrop}
-            open={isDialogOpen}
-            onOpenChange={handleDialogClose}
+            {...(editingCrop && { open: isDialogOpen, onOpenChange: handleDialogClose })}
           />
         </div>
 
