@@ -2,6 +2,10 @@
 
 A privacy-preserving soil moisture tracking system built with FHEVM (Fully Homomorphic Encryption Virtual Machine) that allows farmers to securely record and manage encrypted soil moisture data on-chain. Individual moisture values remain private, and only the user can decrypt and view their data.
 
+## 📹 Demo Video
+
+Watch the demo video: [secure-crop-key.mp4](./secure-crop-key.mp4)
+
 ## Features
 
 - **🔒 Encrypted Soil Moisture**: Farmers record soil moisture values (0-100%) that are encrypted before storage
