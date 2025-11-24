@@ -54,26 +54,41 @@ A privacy-preserving soil moisture tracking system built with FHEVM (Fully Homom
 
    # Terminal 2: Deploy to local network
    npx hardhat deploy --network localhost
-
-   # Copy the deployed contract address and update ui/.env.local
-   # VITE_CONTRACT_ADDRESS=0x...
    ```
 
-5. **Start frontend**
+5. **Configure contract address**
+
+   After deployment, create `ui/.env.local` file:
+   
+   ```bash
+   cd ui
+   # Get contract address from deployments/localhost/EncryptedSoilMoisture.json
+   # Or from the deploy output
+   echo "VITE_CONTRACT_ADDRESS=0x5FbDB2315678afecb367f032d93F642f64180aa3" > .env.local
+   ```
+   
+   Or manually create `ui/.env.local` with:
+   ```
+   VITE_CONTRACT_ADDRESS=0x5FbDB2315678afecb367f032d93F642f64180aa3
+   ```
+   
+   **Note**: Replace the address with your actual deployed contract address.
+
+6. **Start frontend**
 
    ```bash
    cd ui
    npm run dev
    ```
 
-6. **Connect wallet and test**
+7. **Connect wallet and test**
 
    - Open the app in your browser
    - Connect wallet to localhost network (Chain ID: 31337)
    - Record soil moisture values
    - Decrypt your moisture to verify encryption/decryption
 
-7. **Deploy to Sepolia Testnet** (after local testing)
+8. **Deploy to Sepolia Testnet** (after local testing)
 
    ```bash
    # Deploy to Sepolia
